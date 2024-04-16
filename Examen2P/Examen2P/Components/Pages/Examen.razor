@@ -1,0 +1,93 @@
+﻿@page "/examen"
+@using Examen2P.Data
+@rendermode InteractiveServer
+
+<h3>Productos</h3>
+
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Inventario</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" @bind="_inventario">
+    </div>
+</div>
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Nombre</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" @bind="_nombre">
+    </div>
+</div>
+<label class="col-sm-2 col-form-label">Departamento</label>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" @onclick="@(() => _departamento = "Frutas")">
+    <label class="form-check-label" for="flexRadioDefault1"> Frutas</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked @onclick="@(() => _departamento = "Verduras")">
+    <label class="form-check-label" for="flexRadioDefault2">Verduras</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" @onclick="@(() => _departamento = "Lácteos")">
+    <label class="form-check-label" for="flexRadioDefault3"> Lácteos</label>
+</div>
+
+<div class="row mt-3">
+    <div class="col-sm-6">
+        <button class="btn btn-primary" @onclick="Guardar">Guardar</button>
+    </div>
+</div>
+
+@if (Inventario.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Inventario</th>
+                <th>Nombre</th>
+                <th>Departamento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in Inventario)
+            {
+                <tr>
+                    <td>@producto.Inventario</td>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.Departamento</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(producto)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Producto> Inventario = new List<Producto>();
+    private string _inventario = "";
+    private string _nombre = "";
+    private string _departamento = "";
+
+    private void Guardar()
+    {
+        Inventario.Add(new Producto { Inventario = _inventario, Nombre = _nombre, Departamento = _departamento });
+        _inventario = "";
+        _nombre = "";
+        _departamento = "";
+    }
+
+    private void Eliminar(Producto producto)
+    {
+        Inventario.Remove(producto);
+    }
+
+    public class Producto
+    {
+        public string Inventario { get; set; }
+        public string Nombre { get; set; }
+        public string Departamento { get; set; }
+    }
+}
